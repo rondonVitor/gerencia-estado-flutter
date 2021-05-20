@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:gerencia_estado_flutter/mobx/app_store.dart';
 
 import 'bloc/app_bloc.dart';
 
@@ -30,7 +32,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  final appBloc = AppBloc();
+  final appStore = AppStore();
 
   @override
   Widget build(BuildContext context) {
@@ -45,20 +47,18 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               'You have pushed the button this many times:',
             ),
-            StreamBuilder(
-                stream: appBloc.stream,
-                builder: (_, __) {
-                  return Text(
-                    appBloc.state.toString(),
-                    style: Theme.of(context).textTheme.headline4,
-                  );
-                })
+            Observer(builder: (_) {
+              return Text(
+                appStore.counter.value.toString(),
+                style: Theme.of(context).textTheme.headline4
+              );
+            }),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          appBloc.add(AppEvent.increment);
+          appStore.increment();
         },
         tooltip: 'Increment',
         child: Icon(Icons.add),
